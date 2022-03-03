@@ -1,0 +1,46 @@
+.App {
+  text-align: center;
+  min-height: 100vh;
+  min-width: 100vw;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+}
+
+.App_header,
+.App_footer {
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 10px 0;
+}
+
+.App_form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+
+  input {
+    &:first-of-type {
+      padding: 10px;
+      outline: none;
+      border: none;
+      margin-bottom: 20px;
+    }
+
+    &:last-of-type {
+      padding: 10px;
+      font-size: 20px;
+    }
+  }
+}
+
+.App_display {
+  p {
+    font-size: 20px;
+    color: white;
+    margin-bottom: 10px;
+  }
+}
