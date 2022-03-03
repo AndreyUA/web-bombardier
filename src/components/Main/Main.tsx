@@ -56,9 +56,8 @@ const Main = () => {
         dispatch({ type: ActionsTypes.addRequest });
 
         try {
-          const response = await axios.post(
-            "https://link-preview-generator.herokuapp.com/link",
-            { url }
+          const response = await axios.get(
+            `https://cors-anywhere.herokuapp.com/${url}`
           );
 
           if (response.data) {
