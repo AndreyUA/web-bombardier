@@ -14,6 +14,11 @@
   font-size: calc(10px + 2vmin);
   color: white;
   padding: 10px 0;
+
+  a {
+    color: #f3bf1b;
+    text-decoration: none;
+  }
 }
 
 .App_form {
@@ -38,7 +43,16 @@
 }
 
 .App_display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
   p {
+    width: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     font-size: 20px;
     color: white;
     margin-bottom: 10px;

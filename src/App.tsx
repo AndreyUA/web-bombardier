@@ -100,13 +100,31 @@ function App() {
           />
         </form>
         <div className="App_display">
-          <p>Requests: {currentReport.requests}</p>
-          <p>Success: {currentReport.success}</p>
-          <p>Failed: {currentReport.failed}</p>
-          <p>Status: {currentReport.status ? "ON" : "OFF"}</p>
+          <p>
+            <span>Requests:</span>
+            <span>{currentReport.requests}</span>
+          </p>
+          <p>
+            <span>Success:</span>
+            <span>{currentReport.success}</span>
+          </p>
+          <p>
+            <span>Failed:</span>
+            <span>{currentReport.failed}</span>
+          </p>
+          <p>
+            <span>Status:</span>
+            <span>{currentReport.status ? "ON" : "OFF"}</span>
+          </p>
         </div>
       </main>
-      <footer className="App_footer">2022</footer>
+      <footer className="App_footer">
+        <p>Builded with ReactJS and VITE.</p>
+        <p>
+          <a href="https://github.com/AndreyUA/web-bombardier">AndreyUA</a>
+          <span> 2022.</span>
+        </p>
+      </footer>
     </div>
   );
 }
