@@ -42,6 +42,8 @@ const Main = () => {
   const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    if (!isSubmit) dispatch({ type: ActionsTypes.initialState });
+
     if (new URL(url)) {
       setIsSubmit((prevState) => !prevState);
       dispatch({ type: ActionsTypes.changeStatus });
@@ -69,12 +71,6 @@ const Main = () => {
       return () => {
         clearInterval(bombardierRequest);
       };
-    }
-  }, [isSubmit]);
-
-  useEffect(() => {
-    if (!isSubmit) {
-      dispatch({ type: ActionsTypes.initialState });
     }
   }, [isSubmit]);
 
