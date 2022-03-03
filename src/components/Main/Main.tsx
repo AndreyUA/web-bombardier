@@ -56,7 +56,10 @@ const Main = () => {
         dispatch({ type: ActionsTypes.addRequest });
 
         try {
-          const response = await axios.get(url);
+          const response = await axios.post(
+            "https://link-preview-generator.herokuapp.com/link",
+            { url }
+          );
 
           if (response.data) {
             dispatch({ type: ActionsTypes.addSuccess });
@@ -66,7 +69,7 @@ const Main = () => {
 
           dispatch({ type: ActionsTypes.addFailed });
         }
-      }, 200);
+      }, 500);
 
       return () => {
         clearInterval(bombardierRequest);
