@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent } from "react";
+import { useState, useEffect, useReducer, ChangeEvent, Reducer } from "react";
 import axios from "axios";
 
 import "./App.scss";
@@ -10,18 +10,51 @@ interface CurrentReportProps {
   status: boolean;
 }
 
-function App() {
-  const initialState = {
-    requests: 0,
-    success: 0,
-    failed: 0,
-    status: false,
-  };
+enum ActionsTypes {
+  addRequest = "addRequest",
+  addSuccess = "addSuccess",
+  addFailed = "addFailed",
+  changeStatus = "changeStatus",
+  initialState = "initialState",
+}
 
+interface ActionsProps {
+  type:
+    | ActionsTypes.addFailed
+    | ActionsTypes.addRequest
+    | ActionsTypes.addSuccess
+    | ActionsTypes.changeStatus
+    | ActionsTypes.initialState;
+}
+
+const initialState = {
+  requests: 0,
+  success: 0,
+  failed: 0,
+  status: false,
+};
+
+function reducer(state: CurrentReportProps, action: ActionsProps) {
+  switch (action.type) {
+    case ActionsTypes.addRequest:
+      return { ...state, requests: state.requests + 1 };
+    case ActionsTypes.addSuccess:
+      return { ...state, success: state.success + 1 };
+    case ActionsTypes.addFailed:
+      return { ...state, failed: state.failed + 1 };
+    case ActionsTypes.changeStatus:
+      return { ...state, status: !state.status };
+
+    default:
+      return initialState;
+  }
+}
+
+function App() {
   const [url, setUrl] = useState<string>("");
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
-  const [currentReport, setCurrentReport] =
-    useState<CurrentReportProps>(initialState);
+
+  const [currentReportState, dispatch] = useReducer(reducer, initialState);
 
   const handleUrlChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUrl(e.target.value);
@@ -32,37 +65,25 @@ function App() {
 
     if (new URL(url)) {
       setIsSubmit((prevState) => !prevState);
-      setCurrentReport((prevState) => ({
-        ...prevState,
-        status: !prevState.status,
-      }));
+      dispatch({ type: ActionsTypes.changeStatus });
     }
   };
 
   useEffect(() => {
     if (isSubmit) {
       const bombardierRequest = setInterval(async () => {
-        setCurrentReport((prevState) => ({
-          ...prevState,
-          requests: prevState.requests + 1,
-        }));
+        dispatch({ type: ActionsTypes.addRequest });
 
         try {
           const response = await axios.get(url);
 
           if (response.data) {
-            setCurrentReport((prevState) => ({
-              ...prevState,
-              success: prevState.success + 1,
-            }));
+            dispatch({ type: ActionsTypes.addSuccess });
           }
         } catch (error) {
           console.log(error);
 
-          setCurrentReport((prevState) => ({
-            ...prevState,
-            failed: prevState.failed + 1,
-          }));
+          dispatch({ type: ActionsTypes.addFailed });
         }
 
         console.log("TICK !!! ", url);
@@ -76,7 +97,8 @@ function App() {
 
   useEffect(() => {
     if (!isSubmit) {
-      setCurrentReport(initialState);
+      dispatch({ type: ActionsTypes.initialState });
+      dispatch({ type: ActionsTypes.initialState });
     }
   }, [isSubmit]);
 
@@ -102,19 +124,19 @@ function App() {
         <div className="App_display">
           <p>
             <span>Requests:</span>
-            <span>{currentReport.requests}</span>
+            <span>{currentReportState.requests}</span>
           </p>
           <p>
             <span>Success:</span>
-            <span>{currentReport.success}</span>
+            <span>{currentReportState.success}</span>
           </p>
           <p>
             <span>Failed:</span>
-            <span>{currentReport.failed}</span>
+            <span>{currentReportState.failed}</span>
           </p>
           <p>
             <span>Status:</span>
-            <span>{currentReport.status ? "ON" : "OFF"}</span>
+            <span>{currentReportState.status ? "ON" : "OFF"}</span>
           </p>
         </div>
       </main>
