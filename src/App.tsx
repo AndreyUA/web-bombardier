@@ -1,31 +1,13 @@
-import { useState, useEffect, useReducer, ChangeEvent, Reducer } from "react";
+import { useState, useEffect, useReducer, ChangeEvent, FC } from "react";
 import axios from "axios";
 
+import Header from "./components/Header/Header";
+import Form from "./components/Form/Form";
+import Display from "./components/Display/Display";
+import Footer from "./components/Footer/Footer";
+
+import { CurrentReportProps, ActionsTypes, ActionsProps } from "./types";
 import "./App.scss";
-
-interface CurrentReportProps {
-  requests: number;
-  success: number;
-  failed: number;
-  status: boolean;
-}
-
-enum ActionsTypes {
-  addRequest = "addRequest",
-  addSuccess = "addSuccess",
-  addFailed = "addFailed",
-  changeStatus = "changeStatus",
-  initialState = "initialState",
-}
-
-interface ActionsProps {
-  type:
-    | ActionsTypes.addFailed
-    | ActionsTypes.addRequest
-    | ActionsTypes.addSuccess
-    | ActionsTypes.changeStatus
-    | ActionsTypes.initialState;
-}
 
 const initialState = {
   requests: 0,
@@ -50,7 +32,7 @@ function reducer(state: CurrentReportProps, action: ActionsProps) {
   }
 }
 
-function App() {
+const App: FC = () => {
   const [url, setUrl] = useState<string>("");
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
@@ -85,8 +67,6 @@ function App() {
 
           dispatch({ type: ActionsTypes.addFailed });
         }
-
-        console.log("TICK !!! ", url);
       }, 200);
 
       return () => {
@@ -98,57 +78,29 @@ function App() {
   useEffect(() => {
     if (!isSubmit) {
       dispatch({ type: ActionsTypes.initialState });
-      dispatch({ type: ActionsTypes.initialState });
     }
   }, [isSubmit]);
 
   return (
     <div className="App">
-      <header className="App_header">
-        <h1>Web Bombardier</h1>
-      </header>
+      <Header />
       <main>
-        <form className="App_form" onSubmit={handleSubmit}>
-          <input
-            value={url}
-            onChange={handleUrlChange}
-            type="text"
-            placeholder="enter your URL!"
-          />
-          <input
-            disabled={!url.length}
-            type="submit"
-            value={isSubmit ? "STOP" : "START"}
-          />
-        </form>
-        <div className="App_display">
-          <p>
-            <span>Requests:</span>
-            <span>{currentReportState.requests}</span>
-          </p>
-          <p>
-            <span>Success:</span>
-            <span>{currentReportState.success}</span>
-          </p>
-          <p>
-            <span>Failed:</span>
-            <span>{currentReportState.failed}</span>
-          </p>
-          <p>
-            <span>Status:</span>
-            <span>{currentReportState.status ? "ON" : "OFF"}</span>
-          </p>
-        </div>
+        <Form
+          handleSubmit={handleSubmit}
+          url={url}
+          handleUrlChange={handleUrlChange}
+          isSubmit={isSubmit}
+        />
+        <Display
+          requests={currentReportState.requests}
+          success={currentReportState.success}
+          failed={currentReportState.failed}
+          status={currentReportState.status}
+        />
       </main>
-      <footer className="App_footer">
-        <p>Builded with ReactJS and VITE.</p>
-        <p>
-          <a href="https://github.com/AndreyUA/web-bombardier">AndreyUA</a>
-          <span> 2022.</span>
-        </p>
-      </footer>
+      <Footer />
     </div>
   );
-}
+};
 
 export default App;
